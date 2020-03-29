@@ -1,15 +1,15 @@
 const express = require('express');
-const OktaJwtVerfifier = require('@okta/jwt-verifier');
+const OktaJwtVerifier = require('@okta/jwt-verifier');
 var cors = require('cors');
 
 const config = require('./config.js')
 
-const oktaJwtVerifier({
+const oktaJwtVerifier = new OktaJwtVerifier({
     clientId: config.resourceServer.oidc.clientId,
-    isser: config.resourceServer.oidc.issuer,
+    issuer: config.resourceServer.oidc.issuer,
     assertClaims: config.resourceServer.assertClaims,
     testing: config.resourceServer.oidc.testing
-});
+  });
 
 function authenticatedRequired(req, res, next) {
     const authHeader = req.headers.authorization || '';
@@ -22,6 +22,7 @@ function authenticatedRequired(req, res, next) {
 
     const accessToken = match[1];
     const audience = config.resourceServer.assertClaims.aud;
+    
     return oktaJwtVerifier.verifyAccessToken(accessToken, audience)
         .then((jwt) => {
             req.jwt = jwt;
@@ -44,6 +45,21 @@ app.get('/', (req, res) => {
 
 app.get('/secure', authenticatedRequired, (req, res) => {
     res.json(req.jwt);
+});
+
+app.get('/api/reservations', authenticatedRequired, (req, res) => {
+    res.json({
+        reservations: [
+          {
+            date:  new Date(),
+            text: 'First reservation'
+          },
+          {
+            date:  new Date(new Date().getTime() - 1000 * 60 * 60),
+            text: 'Second reservation'
+          }
+        ]
+      });
 });
 
 app.listen(config.resourceServer.port, () => {

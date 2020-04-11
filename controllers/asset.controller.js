@@ -16,3 +16,21 @@ exports.getAssets = async (req, res, next) => {
         });
     }
 }
+
+exports.addAsset = async (req, res, next) => {
+    try {   
+        const { name, type } = req.body;
+
+        const asset = await Asset.create(req.body);
+    
+        return res.status(201).json({
+            success: true,
+            data: asset
+        });   
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: err
+        });
+    }
+}

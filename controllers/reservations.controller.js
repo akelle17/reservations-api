@@ -20,19 +20,6 @@ exports.getReservations = async (req, res, next) => {
             error: err
         });
     }
-    res.send('GET Reservations');
-        //      res.json({
-        //         reservations: [
-        //           {
-        //             date:  new Date(),
-        //             text: 'First reservation'
-        //           },
-        //           {
-        //             date:  new Date(new Date().getTime() - 1000 * 60 * 60),
-        //             text: 'Second reservation'
-        //           }
-        //         ]
-        //       });
 }
 
 // @desc        Add a reservation
@@ -40,6 +27,9 @@ exports.getReservations = async (req, res, next) => {
 // @access      public
 exports.addReservation = async (req, res, next) => {
     res.send('POST Reservation');
+    const { text } = req.body;
+
+    const reservation = await Reservation.create()
 }
 
 // @desc        Delete a reservation

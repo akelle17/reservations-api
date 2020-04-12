@@ -13,6 +13,10 @@ exports.authenticatedRequired = (req, res, next) => {
     const authHeader = req.headers.authorization || '';
     const match = authHeader.match(/Bearer (.+)/);
 
+    // if (process.env.NODE_ENV === 'development') {
+    //     return next();
+    // }
+
     if (!match) {
         res.status(401);
         return next('Unauthorized');

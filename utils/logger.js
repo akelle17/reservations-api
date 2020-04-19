@@ -18,16 +18,16 @@ const assetLogger = createLogger({
     new transports.Console(),
     new transports.File({ filename: 'combined.log' }),
     new transports.MongoDB({
-      level: 'info',
+      level: 'error',
       db: process.env.MONGO_URI,
       collection: 'logs'
     })
   ],
   exceptionHandlers: [
     new transports.Console(),
-    new transports.File({ filename: 'combined.log'}),
+    new transports.File({ filename: 'unhandled-combined.log'}),
     new transports.MongoDB({
-      level: 'info',
+      level: 'error',
       db: process.env.MONGO_URI,
       collection: 'logs'
     })
@@ -41,11 +41,26 @@ const reservationLogger = createLogger({
   defaultMeta: {
     service: 'reservation-service'
   },
+  format: combine(
+    timestamp({
+        format: 'YYYY-MM-DD HH:mm:ss'
+    }),
+    json()
+  ),
   transports: [
     new transports.Console(),
     new transports.File({ filename: 'combined.log' }),
     new transports.MongoDB({
-      level: 'info',
+      level: 'error',
+      db: process.env.MONGO_URI,
+      collection: 'logs'
+    })
+  ],
+  exceptionHandlers: [
+    new transports.Console(),
+    new transports.File({ filename: 'unhandled-combined.log'}),
+    new transports.MongoDB({
+      level: 'error',
       db: process.env.MONGO_URI,
       collection: 'logs'
     })

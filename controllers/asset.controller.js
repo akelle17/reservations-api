@@ -27,13 +27,13 @@ exports.addAsset = async (req, res, next) => {
     try {   
         const { name, type } = req.body;
 
-        assetLogger.info('Add asset request', {
+        assetLogger.debug('>>>> Entering add asset request', {
           body: req.body
         });
 
         const asset = await Asset.create(req.body);
     
-        assetLogger.info('Add asset success');
+        assetLogger.debug('Add asset success');
 
         return res.status(201).json({
             success: true,

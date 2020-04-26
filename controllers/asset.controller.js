@@ -23,6 +23,28 @@ exports.getAssets = async (req, res, next) => {
     }
 }
 
+exports.getAsset = async (req, res, next) => {
+    assetLogger.info('>>>> GET Assets');
+
+    const id = req.params.id;
+
+    try {
+        const asset = await Asset.findById({ _id: id });
+        
+        assetLogger.info('<<<< GET Asset');
+        
+        return res.status(200).json({
+            success: true,
+            data: asset
+        })
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: err
+        });
+    }
+}
+
 exports.addAsset = async (req, res, next) => {
     try {   
         const { name, type } = req.body;
@@ -62,5 +84,37 @@ exports.addAsset = async (req, res, next) => {
               error: err
           });
         }
+    }
+}
+
+
+exports.deleteAsset = async (req, res, next) => {
+    assetLogger.info('>>>> DELETE Assets');
+
+    const id = req.params.id;
+
+    try {
+        const asset = await Asset.findById({ _id: id });
+        
+        if (!asset) {
+            return res.status(404).json({
+                success: false,
+                error: 'No asset found'
+            })
+        }
+
+        await asset.remove();
+
+        assetLogger.info('<<<< DELETE Asset');
+        
+        return res.status(200).json({
+            success: true,
+            data: {}
+        })
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            error: err
+        });
     }
 }
